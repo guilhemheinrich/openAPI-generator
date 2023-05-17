@@ -1,0 +1,30 @@
+{
+  "name": "openapi-generator",
+  "version": "1.0.0",
+  "description": "An openapi generator based on typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilhemheinrich/openAPI-generator.git"
+  },
+  "keywords": [
+    "typescript",
+    "openapi",
+    "generator"
+  ],
+  "author": "Guilhem HEINRICH <guilhem.heinrich@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guilhemheinrich/openAPI-generator/issues"
+  },
+  "homepage": "https://github.com/guilhemheinrich/openAPI-generator#readme",
+  "dependencies": {
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "@ts-stack/openapi-spec": "^3.1.5"
+  }
+}
