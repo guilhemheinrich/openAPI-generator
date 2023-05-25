@@ -22,6 +22,11 @@
   },
   "homepage": "https://github.com/guilhemheinrich/openAPI-generator#readme",
   "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^10.1.0",
+    "@types/fs-extra": "^11.0.1",
+    "@types/mustache": "^4.2.2",
+    "fs-extra": "^11.1.1",
+    "mustache": "^4.2.0",
     "typescript": "^5.0.4"
   },
   "devDependencies": {

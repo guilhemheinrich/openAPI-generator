@@ -1,0 +1,1678 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AppEAU - API",
+        "description": "Cette API permet de calculer le bilan hydrique de diff\u00e9rentes parcelles selon les donn\u00e9es m\u00e9t\u00e9o",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/api/calcul/direct": {
+            "post": {
+                "operationId": "api_calculdirect_post",
+                "tags": [
+                    "Resultat"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": "[[\"\",\"meteo.Date\",\"meteo.Temp\",\"meteo.Pluie\",\"meteo.ETP\",\"FTSWtot\",\"PHFb\"],[\"1\",\"01\\/01\\/2023\",\"0\",\"0\",\"0\",\"0.8\",\"-0.0521528577157462\"],[\"2\",\"02\\/01\\/2023\",\"0\",\"0\",\"0\",\"0.8\",\"-0.0521528577157462\"],[\"3\",\"03\\/01\\/2023\",\"0\",\"0\",\"0\",\"0.8\",\"-0.0521528577157462\"],[\"4\",\"04\\/01\\/2023\",\"0\",\"0\",\"0\",\"0.8\",\"-0.0521528577157462\"],[\"5\",\"05\\/01\\/2023\",\"0\",\"0\",\"0\",\"0.8\",\"-0.0521528577157462\"],[\"6\",\"06\\/01\\/2023\",\"0\",\"0\",\"0\",\"0.8\",\"-0.0521528577157462\"],false]"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    }
+                },
+                "summary": "Obtenir un r\u00e9sultat directement sans enregistrement en base de donn\u00e9e",
+                "description": "Permet d'obtenir directement un r\u00e9sultat \u00e0 partir des param\u00e8tres d'une parcelle et de donn\u00e9es m\u00e9t\u00e9o sans aucun enregistrement en base de donn\u00e9e",
+                "parameters": [],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": [],
+                            "example": {
+                                "parametresParcelle": {
+                                    "largeurInterRang": 4,
+                                    "hauteurFeuillage": 2.5,
+                                    "reserveUtile": 350,
+                                    "entretienCavaillonDebut": "enh",
+                                    "entretienInterRangDebut": "enh",
+                                    "dateModifEntretien": "01/01",
+                                    "entretienCavaillonFin": "enh",
+                                    "entretienInterRangFin": "enh",
+                                    "dateDebourrement": "01/04",
+                                    "orientationRang": "NS"
+                                },
+                                "data": [
+                                    {
+                                        "date": "2023-03-05",
+                                        "pluviometrieJour": 0,
+                                        "temperatureMoyJour": 0,
+                                        "etpJour": 0
+                                    },
+                                    {
+                                        "date": "2023-03-06",
+                                        "pluviometrieJour": 0,
+                                        "temperatureMoyJour": 0,
+                                        "etpJour": 0
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/date_calcul/{parcelleId}": {
+            "get": {
+                "operationId": "api_date_calcul_parcelleId_get",
+                "tags": [
+                    "Resultat"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": "2023-03-20T16:03:44+01:00"
+                            }
+                        }
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer la date de votre dernier calcul",
+                "description": "Permet de r\u00e9cup\u00e9rer la date du dernier calcul qui a \u00e9t\u00e9 effectu\u00e9 sur une parcelle",
+                "parameters": [
+                    {
+                        "name": "parcelleId",
+                        "in": "path",
+                        "description": "Id de la parcelle",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": 1
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/donnees_meteo/multi": {
+            "post": {
+                "operationId": "api_donnees_meteomulti_post",
+                "tags": [
+                    "DonneesMeteo"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": {
+                                    "24": {
+                                        "dateReception": "2023-05-19T15:46:47+02:00",
+                                        "datePrevisionnel": "2023-05-19T15:46:47+02:00"
+                                    },
+                                    "25": {
+                                        "dateReception": "2023-05-19T15:46:47+02:00",
+                                        "datePrevisionnel": "2023-05-19T15:46:47+02:00"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "summary": "Ajouter plusieurs donn\u00e9es m\u00e9t\u00e9o \u00e0 plusieurs parcelles",
+                "description": "Permet d'ajouter plusieurs donn\u00e9es m\u00e9t\u00e9o \u00e0 plusieurs parcelles ou de modifier les donn\u00e9es m\u00e9t\u00e9o existantes si elles existent d\u00e9j\u00e0",
+                "parameters": [],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": [],
+                            "example": [
+                                {
+                                    "parcelleId": 1,
+                                    "data": [
+                                        {
+                                            "date": "2023-03-05",
+                                            "pluviometrieJour": 0,
+                                            "temperatureMoyJour": 0,
+                                            "etpJour": 0
+                                        },
+                                        {
+                                            "date": "2023-03-06",
+                                            "pluviometrieJour": 0,
+                                            "temperatureMoyJour": 0,
+                                            "etpJour": 0
+                                        }
+                                    ]
+                                },
+                                {
+                                    "parcelleId": 2,
+                                    "data": [
+                                        {
+                                            "date": "2023-03-05",
+                                            "pluviometrieJour": 0,
+                                            "temperatureMoyJour": 0,
+                                            "etpJour": 0
+                                        },
+                                        {
+                                            "date": "2023-03-06",
+                                            "pluviometrieJour": 0,
+                                            "temperatureMoyJour": 0,
+                                            "etpJour": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles": {
+            "get": {
+                "operationId": "api_parcelles_get_collection",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": {
+                                    "@context": "/api/contexts/Parcelle",
+                                    "@id": "/api/parcelles",
+                                    "@type": "hydra:Collection",
+                                    "hydra:member": [
+                                        {
+                                            "id": 41,
+                                            "nom": "TEST 1234"
+                                        },
+                                        {
+                                            "id": 20,
+                                            "nom": "Test occupation"
+                                        }
+                                    ],
+                                    "hydra:totalItems": 2
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer la liste de vos parcelles",
+                "description": "Permet de r\u00e9cup\u00e9rer la liste (id et nom) de vos parcelles",
+                "parameters": [],
+                "deprecated": false
+            },
+            "post": {
+                "operationId": "api_parcelles_post",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Parcelle resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle.jsonld-api"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle-api"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle-api"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    }
+                },
+                "summary": "Ajouter une parcelle",
+                "description": "Permet d'ajouter une parcelle <br> <br>\n                Certains champs ne peuvent recevoir uniquement des donn\u00e9es sp\u00e9cifiques : <br>\n                \"entretienCavaillonDebut\" et \"entretienCavaillonFin\" : \"enh\" (Enherb\u00e9) ou \"desh\" (D\u00e9sherb\u00e9) <br>\n                \"entretienInterRangDebut\" et \"entretienInterRangFin\" : \"enh\" (Enherb\u00e9 tous les rangs), \"1/2\" (Enherb\u00e9 1 rang sur 2), \"1/3\" (Enherb\u00e9 1 rang sur 3), \"desh\" (D\u00e9sherb\u00e9) <br>\n                \"dateModifEntretien\" et \"dateDebourrement\" : Peuvent recevoir un jour et un mois sous la forme \"dd/mm\" (par exemple, \"01/01\") <br>\n                \"orientationRang\" : \"NS\", \"EO\",\"NESO\",\"NOSE\" ",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Parcelle resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Parcelle.jsonld-api"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Parcelle-api"
+                            }
+                        },
+                        "text/html": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Parcelle-api"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/attente": {
+            "get": {
+                "operationId": "api_parcellesattente_get_collection",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": {
+                                    "@context": "/api/contexts/Parcelle",
+                                    "@id": "/api/parcelles/attente",
+                                    "@type": "hydra:Collection",
+                                    "hydra:member": [
+                                        {
+                                            "id": 24
+                                        },
+                                        {
+                                            "id": 25
+                                        }
+                                    ],
+                                    "hydra:totalItems": 2
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer les parcelles en attente de calcul",
+                "description": "Permet de savoir si il y a des parcelles en attente de calcul",
+                "parameters": [],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/details": {
+            "get": {
+                "operationId": "api_parcellesdetails_get_collection",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parcelle collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "hydra:member": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Parcelle.jsonld-api"
+                                            }
+                                        },
+                                        "hydra:totalItems": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        "hydra:view": {
+                                            "type": "object",
+                                            "properties": {
+                                                "@id": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "@type": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:first": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "hydra:last": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "hydra:previous": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "hydra:next": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
+                                            }
+                                        },
+                                        "hydra:search": {
+                                            "type": "object",
+                                            "properties": {
+                                                "@type": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:template": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:variableRepresentation": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:mapping": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "@type": {
+                                                                "type": "string"
+                                                            },
+                                                            "variable": {
+                                                                "type": "string"
+                                                            },
+                                                            "property": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "hydra:member"
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Parcelle-api"
+                                    }
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Parcelle-api"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer la liste de vos parcelles avec le d\u00e9tail",
+                "description": "Permet de r\u00e9cup\u00e9rer la liste de vos parcelles avec les d\u00e9tails",
+                "parameters": [],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/details/{listParcellesId}": {
+            "get": {
+                "operationId": "api_parcellesdetails_listParcellesId_get_collection",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parcelle collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "hydra:member": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Parcelle.jsonld-api"
+                                            }
+                                        },
+                                        "hydra:totalItems": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        "hydra:view": {
+                                            "type": "object",
+                                            "properties": {
+                                                "@id": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "@type": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:first": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "hydra:last": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "hydra:previous": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                },
+                                                "hydra:next": {
+                                                    "type": "string",
+                                                    "format": "iri-reference"
+                                                }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
+                                            }
+                                        },
+                                        "hydra:search": {
+                                            "type": "object",
+                                            "properties": {
+                                                "@type": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:template": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:variableRepresentation": {
+                                                    "type": "string"
+                                                },
+                                                "hydra:mapping": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "@type": {
+                                                                "type": "string"
+                                                            },
+                                                            "variable": {
+                                                                "type": "string"
+                                                            },
+                                                            "property": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "required": {
+                                                                "type": "boolean"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "hydra:member"
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Parcelle-api"
+                                    }
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Parcelle-api"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer le d\u00e9tail de plusieurs parcelles",
+                "description": "Permet de r\u00e9cup\u00e9rer le d\u00e9tail des parcelles cibl\u00e9s par un tableau d'id",
+                "parameters": [
+                    {
+                        "name": "listParcellesId",
+                        "in": "path",
+                        "description": "Id des parcelles",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "[1,2]"
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/multi/{listParcellesId}/resultat/{dateDebut}/{dateFin}": {
+            "get": {
+                "operationId": "api_parcellesmulti_listParcellesIdresultat_dateDebut_dateFin_get_collection",
+                "tags": [
+                    "Resultat"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": [
+                                    {
+                                        "1": {
+                                            "2022": {
+                                                "dateCalcul": "20/03/2023 14:58:57",
+                                                "resultats": []
+                                            },
+                                            "2023": {
+                                                "dateCalcul": "20/03/2023 14:58:57",
+                                                "resultats": []
+                                            }
+                                        },
+                                        "2": {
+                                            "2022": {
+                                                "dateCalcul": "20/03/2023 14:58:57",
+                                                "resultats": []
+                                            },
+                                            "2023": {
+                                                "dateCalcul": "20/03/2023 14:58:57",
+                                                "resultats": []
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer les r\u00e9sultats de plusieurs parcelles",
+                "description": "Permet de r\u00e9cup\u00e9rer les r\u00e9sultats de plusieurs parcelles en pr\u00e9cisant\n                 l'intervalle de date pour chacune de parcelles",
+                "parameters": [
+                    {
+                        "name": "listParcellesId",
+                        "in": "path",
+                        "description": "Id des parcelles",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "[1,2]"
+                    },
+                    {
+                        "name": "dateDebut",
+                        "in": "path",
+                        "description": "Date du premier r\u00e9sultat voulu",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "20-02-2020"
+                    },
+                    {
+                        "name": "dateFin",
+                        "in": "path",
+                        "description": "Date du dernier r\u00e9sultat voulu",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "08-03-2023"
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/{id}": {
+            "get": {
+                "operationId": "api_parcelles_id_get",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parcelle resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle.jsonld-api"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle-api"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle-api"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer une parecelle",
+                "description": "Permet de r\u00e9cup\u00e9rer les d\u00e9tails de la parcelle correspondante \u00e0 l'id renseign\u00e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de la parcelle",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": 1
+                    }
+                ],
+                "deprecated": false
+            },
+            "delete": {
+                "operationId": "api_parcelles_id_delete",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Parcelle resource deleted"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Supprimer une parcelle",
+                "description": "Permet de supprimer la parcelle correspondante \u00e0 l'id renseign\u00e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de la parcelle",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": 1
+                    }
+                ],
+                "deprecated": false
+            },
+            "patch": {
+                "operationId": "api_parcelles_id_patch",
+                "tags": [
+                    "Parcelle"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parcelle resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle.jsonld-api"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle-api"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Parcelle-api"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Modifier une parcelle",
+                "description": "Permet de modifier la parcelle correspondante \u00e0 l'id renseign\u00e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de la parcelle",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Parcelle resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Parcelle-api"
+                            }
+                        },
+                        "application/vnd.api+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Parcelle-api"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/{parcelleId}/donnees_meteo/{dateDebut}/{dateFin}": {
+            "get": {
+                "operationId": "api_parcelles_parcelleIddonnees_meteo_dateDebut_dateFin_get_collection",
+                "tags": [
+                    "DonneesMeteo"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": [
+                                    {
+                                        "id": "43078",
+                                        "date": "2020-02-20T00:00:00+01:00",
+                                        "pluviometrieJour": 8.5,
+                                        "temperatureMoyJour": 4.3,
+                                        "etpJour": 9.4
+                                    },
+                                    {
+                                        "id": "43079",
+                                        "date": "2020-02-21T00:00:00+01:00",
+                                        "pluviometrieJour": 7,
+                                        "temperatureMoyJour": 8.9,
+                                        "etpJour": 5.3
+                                    },
+                                    {
+                                        "id": "43080",
+                                        "date": "2020-02-22T00:00:00+01:00",
+                                        "pluviometrieJour": 8,
+                                        "temperatureMoyJour": 4.8,
+                                        "etpJour": 1.6
+                                    },
+                                    {
+                                        "id": "43081",
+                                        "date": "2020-02-23T00:00:00+01:00",
+                                        "pluviometrieJour": 7.2,
+                                        "temperatureMoyJour": 1,
+                                        "etpJour": 2.7
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer les donn\u00e9es m\u00e9t\u00e9o d'une parcelle",
+                "description": "Permet de r\u00e9cup\u00e9rer les donn\u00e9es m\u00e9t\u00e9o de la parcelle cibl\u00e9 par l'id d\u00e9sign\u00e9, \n                en pr\u00e9cisant une intervalle de date",
+                "parameters": [
+                    {
+                        "name": "parcelleId",
+                        "in": "path",
+                        "description": "Id de la parcelle",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": 1
+                    },
+                    {
+                        "name": "dateDebut",
+                        "in": "path",
+                        "description": "Date de la premi\u00e8re donn\u00e9e m\u00e9t\u00e9o voulue",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "20-02-2020"
+                    },
+                    {
+                        "name": "dateFin",
+                        "in": "path",
+                        "description": "Date de la derni\u00e8re donn\u00e9e m\u00e9t\u00e9o voulue",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "08-03-2023"
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/api/parcelles/{parcelleId}/resultat/{dateDebut}/{dateFin}": {
+            "get": {
+                "operationId": "api_parcelles_parcelleIdresultat_dateDebut_dateFin_get_collection",
+                "tags": [
+                    "Resultat"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": [],
+                                "example": [
+                                    {
+                                        "2022": {
+                                            "dateCalcul": "20/03/2023 14:58:57",
+                                            "resultats": []
+                                        },
+                                        "2023": {
+                                            "dateCalcul": "20/03/2023 14:58:57",
+                                            "resultats": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "summary": "R\u00e9cup\u00e9rer les r\u00e9sultats selon la parcelle et l'intervalle de date",
+                "description": "Permet de r\u00e9cup\u00e9rer les r\u00e9sultats de la parcelle d\u00e9sign\u00e9 dans l'intervalle de date selectionn\u00e9e",
+                "parameters": [
+                    {
+                        "name": "parcelleId",
+                        "in": "path",
+                        "description": "Id de la parcelle",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": 1
+                    },
+                    {
+                        "name": "dateDebut",
+                        "in": "path",
+                        "description": "Date du premier r\u00e9sultat voulu",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "20-02-2020"
+                    },
+                    {
+                        "name": "dateFin",
+                        "in": "path",
+                        "description": "Date du dernier r\u00e9sultat voulu",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false,
+                        "example": "08-03-2023"
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/auth": {
+            "post": {
+                "operationId": "login_check_post",
+                "tags": [
+                    "Login Check"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User token created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "readOnly": true,
+                                            "type": "string",
+                                            "nullable": false
+                                        }
+                                    },
+                                    "required": [
+                                        "token"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a user token.",
+                "requestBody": {
+                    "description": "The login data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "nullable": false
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "nullable": false
+                                    }
+                                },
+                                "required": [
+                                    "username",
+                                    "password"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "parameters": []
+        }
+    },
+    "components": {
+        "schemas": {
+            "DonneesMeteo": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "pluviometrieJour": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "temperatureMoyJour": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "etpJour": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "parcelle": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "date",
+                    "pluviometrieJour",
+                    "temperatureMoyJour",
+                    "etpJour"
+                ]
+            },
+            "DonneesMeteo.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "pluviometrieJour": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "temperatureMoyJour": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "etpJour": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "parcelle": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "date",
+                    "pluviometrieJour",
+                    "temperatureMoyJour",
+                    "etpJour"
+                ]
+            },
+            "ParametresParcelle-api": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "largeurInterRang": {
+                        "minimum": 0.5,
+                        "maximum": 4,
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "hauteurFeuillage": {
+                        "minimum": 0.5,
+                        "maximum": 2.5,
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "reserveUtile": {
+                        "minimum": 50,
+                        "maximum": 350,
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "entretienCavaillonDebut": {
+                        "enum": [
+                            "enh",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "entretienInterRangDebut": {
+                        "enum": [
+                            "enh",
+                            "1/2",
+                            "1/3",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dateModifEntretien": {
+                        "pattern": "^(.*(^((?!(30/02)|(31/02)|(31/04)|(31/06)|(31/09)|(31/11)))(((0)[1-9]|[1-2][0-9]|(3)[0-1])(/)(((0)[1-9])|((1)[0-2])))$|^$).*)$",
+                        "type": "string",
+                        "example": "01/01",
+                        "nullable": true
+                    },
+                    "entretienCavaillonFin": {
+                        "enum": [
+                            "enh",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "entretienInterRangFin": {
+                        "enum": [
+                            "enh",
+                            "1/2",
+                            "1/3",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dateDebourrement": {
+                        "pattern": "^(.*(^((?!(30/02)|(31/02)|(31/04)|(31/06)|(31/09)|(31/11)))(((0)[1-9]|[1-2][0-9]|(3)[0-1])(/)(((0)[1-9])|((1)[0-2])))$).*)$",
+                        "default": "01/04",
+                        "example": "01/04",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "orientationRang": {
+                        "enum": [
+                            "NS",
+                            "EO",
+                            "NESO",
+                            "NOSE"
+                        ],
+                        "default": "NS",
+                        "example": "NS",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "entretienCavaillonDebut",
+                    "entretienInterRangDebut",
+                    "dateDebourrement",
+                    "orientationRang"
+                ]
+            },
+            "ParametresParcelle.jsonld-api": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "largeurInterRang": {
+                        "minimum": 0.5,
+                        "maximum": 4,
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "hauteurFeuillage": {
+                        "minimum": 0.5,
+                        "maximum": 2.5,
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "reserveUtile": {
+                        "minimum": 50,
+                        "maximum": 350,
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "entretienCavaillonDebut": {
+                        "enum": [
+                            "enh",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "entretienInterRangDebut": {
+                        "enum": [
+                            "enh",
+                            "1/2",
+                            "1/3",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dateModifEntretien": {
+                        "pattern": "^(.*(^((?!(30/02)|(31/02)|(31/04)|(31/06)|(31/09)|(31/11)))(((0)[1-9]|[1-2][0-9]|(3)[0-1])(/)(((0)[1-9])|((1)[0-2])))$|^$).*)$",
+                        "type": "string",
+                        "example": "01/01",
+                        "nullable": true
+                    },
+                    "entretienCavaillonFin": {
+                        "enum": [
+                            "enh",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "entretienInterRangFin": {
+                        "enum": [
+                            "enh",
+                            "1/2",
+                            "1/3",
+                            "desh"
+                        ],
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dateDebourrement": {
+                        "pattern": "^(.*(^((?!(30/02)|(31/02)|(31/04)|(31/06)|(31/09)|(31/11)))(((0)[1-9]|[1-2][0-9]|(3)[0-1])(/)(((0)[1-9])|((1)[0-2])))$).*)$",
+                        "default": "01/04",
+                        "example": "01/04",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "orientationRang": {
+                        "enum": [
+                            "NS",
+                            "EO",
+                            "NESO",
+                            "NOSE"
+                        ],
+                        "default": "NS",
+                        "example": "NS",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "entretienCavaillonDebut",
+                    "entretienInterRangDebut",
+                    "dateDebourrement",
+                    "orientationRang"
+                ]
+            },
+            "Parcelle-api": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "nom": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "parametres": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ParametresParcelle-api"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "Parcelle.jsonld-api": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "nom": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "parametres": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ParametresParcelle.jsonld-api"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "Resultat": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "dateCalcul": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "parcelle": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "nullable": true
+                    },
+                    "resultats": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "annee": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "tempsCalcul": {
+                        "type": "integer",
+                        "nullable": true
+                    }
+                }
+            },
+            "Resultat.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "dateCalcul": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "parcelle": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "nullable": true
+                    },
+                    "resultats": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "annee": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "tempsCalcul": {
+                        "type": "integer",
+                        "nullable": true
+                    }
+                }
+            }
+        },
+        "responses": {},
+        "parameters": {},
+        "examples": {},
+        "requestBodies": {},
+        "headers": {},
+        "securitySchemes": {
+            "JWT": {
+                "type": "apiKey",
+                "description": "Value for the Authorization header parameter.",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "JWT": []
+        }
+    ],
+    "tags": []
+}
